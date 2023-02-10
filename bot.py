@@ -129,7 +129,7 @@ def get_clan_id(message):
     clan_url = "https://clashspot.net/en/clan/" + message.text
     bot.send_message(message.from_user.id, "Оке, вот кто есть в клане")
 
-    cur_mems = members.get_my_current_clan_members(clan_url)
+    cur_mems = members.get_my_current_clan_members(clan_url + site_tabs["home"])
     if not isinstance(cur_mems, str):
         s = ""
         for i in cur_mems:
