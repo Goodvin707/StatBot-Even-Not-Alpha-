@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from parsing import page_loader
 
 # ------------------War Course------------------
 
@@ -9,25 +10,12 @@ def get_cw_units(url):
     try:
         return [
             _extract_cw_unit_data(i)
-            for i in _prepare_cw_unit_data(url).find_all(
-                "div", class_="members-position"
-            )
+            for i in page_loader.prepare_data(url)
+            .find("section", class_="members separator separator-bottom separator-top")
+            .find_all("div", class_="members-position")
         ]
     except Exception as e:
         return f"Data retrieval error\n{e.with_traceback(None)}"
-
-
-def _prepare_cw_unit_data(url):
-    driver = webdriver.Edge()
-    driver.get(url)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
-
-    # page = requests.get(url)
-    # soup = BeautifulSoup(page.text, "html.parser")
-    return soup.find(
-        "section", class_="members separator separator-bottom separator-top"
-    )
 
 
 def _extract_cw_unit_data(cw_couple):
@@ -116,16 +104,12 @@ def get_my_clan_attacks(url):
     try:
         return [
             _extract_attack_data(i)
-            for i in _prepare_attacks_table(url).find_all("tr", class_="clan1")
+            for i in page_loader.prepare_data(url)
+            .find("section", class_="attacks separator separator-bottom")
+            .find_all("tr", class_="clan1")
         ]
     except Exception as e:
         return f"Data retrieval error\n{e.with_traceback(None)}"
-
-
-def _prepare_attacks_table(url):
-    page = requests.get(url)
-    soup = BeautifulSoup(page.text, "html.parser")
-    return soup.find("section", class_="attacks separator separator-bottom")
 
 
 def _extract_attack_data(my_clan_member):

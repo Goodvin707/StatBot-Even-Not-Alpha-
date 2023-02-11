@@ -1,27 +1,22 @@
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from parsing import page_loader
 
 
 def get_lcw_wars(url):
     try:
         return _remove_ocurrences_by_value(
-            [_extract_war_data(i) for i in _prepare_wars_data(url).find_all("tr")], ""
+            [
+                _extract_war_data(i)
+                for i in page_loader.prepare_data(url)
+                .find("tbody", id="leagues-container")
+                .find_all("tr")
+            ],
+            "",
         )
     except Exception as e:
         return f"Data retrieval error\n{e.with_traceback(None)}"
-
-
-def _prepare_wars_data(url):
-    driver = webdriver.Edge()
-    driver.get(url)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
-
-    # page = requests.get(url)
-    # soup = BeautifulSoup(page.text, "html.parser")
-    # print(soup.find("tbody", id="leagues-container"))
-    return soup.find("tbody", id="leagues-container")
 
 
 def _extract_war_data(war):

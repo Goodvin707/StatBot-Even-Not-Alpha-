@@ -12,7 +12,7 @@ username (типо id) - '@ClashOfClansClanStatBot'
 """
 
 
-clan_url = ""
+clan_url = "https://clashspot.net/en/clan/V8GJ9C0U"
 command_list = "\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n/lwars - список войн лиги клановвых войн (beta)\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК\nОстальные команды есть внутри подпунктов этих команд."
 cw_command_list = "\nВыберите опцию\n/opencw - открыть КВ по номеру\n/badplayerscwbynum - найти неэффективных игроков на выбранном КВ"
 lcw_command_list = "\nВыберите опцию\n/openlcw - открыть ЛКВ по номеру\n/back - назад"
@@ -57,7 +57,7 @@ def start(message):
                 s = ""
                 index = 1
                 for i in war_list:
-                    s += f'#{index}| {i["clan1Name"]} VS {i["clan2Name"]}\n├──Размер: {i["warSize"]} Результат: {i["warWinLose"]}\n└──Итоги: {i["clan1Percent"]} {i["clan1Stars"]} |:| {i["clan2Percent"]} {i["clan2Stars"]}\nДата: {i["clan2Stars"]} {i["warHour"]}'
+                    s += f'#{index}| {i["clan1Name"]} VS {i["clan2Name"]}\n├──Размер: {i["warSize"]} Результат: {i["warWinLose"]}\n└──Итоги: {i["clan1Percent"]} {i["clan1Stars"]} |:| {i["clan2Percent"]} {i["clan2Stars"]}\nДата: {i["clan2Stars"]} {i["warHour"]}\n'
                     index += 1
                 bot.send_message(message.from_user.id, s)
                 bot.send_message(message.from_user.id, cw_command_list)
@@ -134,7 +134,6 @@ def get_clan_id(message):
         s = ""
         for i in cur_mems:
             s += i["nickname"] + " | Звание:" + i["role"] + "\n"
-        print(s)
         bot.send_message(message.from_user.id, s)
     else:
         print(cur_mems)

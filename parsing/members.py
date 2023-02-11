@@ -1,11 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from parsing import page_loader
 
 
 def get_my_current_clan_members(url):
     try:
-        my_clan_members_stats_with_tags = _prepare_data(url).find_all("tr")
+        my_clan_members_stats_with_tags = (
+            page_loader.prepare_data(url).find("div", id="members").find_all("tr")
+        )
         my_clan_members_stats_with_tags = my_clan_members_stats_with_tags[
             1 : len(my_clan_members_stats_with_tags)
         ]
@@ -15,17 +18,6 @@ def get_my_current_clan_members(url):
         return my_clan_members_stats
     except Exception as e:
         return f"Data retrieval error\n{e.with_traceback(None)}"
-
-
-def _prepare_data(url):
-    driver = webdriver.Edge()
-    driver.get(url)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
-
-    # page = requests.get(url)
-    # soup = BeautifulSoup(page.text, "html.parser")
-    return soup.find("div", id="members")
 
 
 def _extract_data(my_clan_member):

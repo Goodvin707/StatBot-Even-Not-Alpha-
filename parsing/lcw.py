@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from parsing import page_loader
 
 
 def get_lcw_rounds(url):
@@ -8,21 +9,12 @@ def get_lcw_rounds(url):
         clan_id = url.split("/")[5]
         return [
             _extract_round_data(i, clan_id)
-            for i in _prepare_wars_data(url).find_all("section", class_="league-round")
+            for i in page_loader.prepare_data(url)
+            .find("div", id="matches")
+            .find_all("section", class_="league-round")
         ]
     except Exception as e:
         return f"Data retrieval error\n{e.with_traceback(None)}"
-
-
-def _prepare_wars_data(url):
-    driver = webdriver.Edge()
-    driver.get(url)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
-
-    # page = requests.get(url)
-    # soup = BeautifulSoup(page.text, "html.parser")
-    return soup.find("div", id="matches")
 
 
 def _extract_round_data(round_tag, clan_id):

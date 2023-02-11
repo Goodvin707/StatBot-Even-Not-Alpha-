@@ -1,24 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from parsing import page_loader
 
 
 def get_wars(url):
     try:
-        return [_extract_war_data(i) for i in _prepare_wars_data(url).find_all("tr")]
+        return [
+            _extract_war_data(i)
+            for i in page_loader.prepare_data(url)
+            .find("tbody", id="clan-warlog-container")
+            .find_all("tr")
+        ]
     except Exception as e:
         return f"Data retrieval error\n{e.with_traceback(None)}"
-
-
-def _prepare_wars_data(url):
-    driver = webdriver.Edge()
-    driver.get(url)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
-
-    # page = requests.get(url)
-    # soup = BeautifulSoup(page.text, 'html.parser')
-    return soup.find("tbody", id="clan-warlog-container")
 
 
 def _extract_war_data(war):
