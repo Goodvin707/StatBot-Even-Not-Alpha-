@@ -98,18 +98,43 @@ def start(message):
                 print(last_cw)
 
         case "/badplayerslastlcw":
+            bot.send_message(
+                message.from_user.id, "Этот маневр обойдется нам в несколько минут"
+            )
             last_lcw = lcw.get_lcw_rounds(
                 lcw_list.get_lcw_wars(clan_url + site_tabs["lClanWars"])[0]["href"]
             )
             if not isinstance(last_lcw, str):
+                worst_players = []
                 for i in last_lcw:
                     round_cw_units = clan_war.get_cw_units(i["href"])
                     s = "------" + i["round"] + "------\n"
                     for j in round_cw_units:
                         if j["attackList"][0] == "no attacks":
                             s += f"{j['position']}. {j['nickname']}\n"
+                            worst_players.append(j["nickname"])
                     bot.send_message(message.from_user.id, s)
 
+                worst_players.sort()
+                worst_players_distinct = []
+                s = ""
+                worse_rating = 0
+                previous = worst_players[0]
+                for i in worst_players:
+                    if i == previous:
+                        worse_rating += 1
+                    else:
+                        # s += f"{previous} не атаковал на {wRating} раундах\n"
+                        worst_players_distinct.append(f"{previous} {worse_rating}")
+                        worse_rating = 1
+                    previous = i
+
+                worst_players_distinct.sort(key=sort_by_worse_rating)
+                for i in worst_players_distinct:
+                    n = i.split(" ")[0]
+                    r = i.split(" ")[1]
+                    s += f"{n} не атаковал на {r} раундах\n"
+                bot.send_message(message.from_user.id, s)
                 bot.send_message(message.from_user.id, "Подсчет окончен")
             else:
                 print(last_lcw)
@@ -375,6 +400,10 @@ def beautify_stars(stars):
             return "★★✰"
         case 3:
             return "★★★"
+
+
+def sort_by_worse_rating(elem):
+    return elem.split(" ")[1]
 
 
 bot.polling(none_stop=True)
