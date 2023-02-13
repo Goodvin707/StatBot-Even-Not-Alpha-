@@ -109,7 +109,7 @@ def get_my_clan_attacks(url):
             .find_all("tr", class_="clan1")
         ]
     except Exception as e:
-        return f"Data retrieval error\n{e.with_traceback(None)}"
+        return f"Data retrieval error\n{e}\n{e.with_traceback(None)}"
 
 
 def _extract_attack_data(my_clan_member):

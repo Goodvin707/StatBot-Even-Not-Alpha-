@@ -47,7 +47,7 @@ def start(message):
                     s += i["nickname"] + " | Звание: " + i["role"] + "\n"
                 bot.send_message(message.from_user.id, s)
             else:
-                print(cur_mems)
+                bot.send_message(message.from_user.id, cur_mems)
 
         case "/wars":
             bot.send_message(message.from_user.id, "Ща оформим")
@@ -63,7 +63,7 @@ def start(message):
                 bot.send_message(message.from_user.id, cw_command_list)
                 bot.register_next_step_handler(message, work_with_cw)
             else:
-                print(war_list)
+                bot.send_message(message.from_user.id, war_list)
                 war_list = []
 
         case "/lwars":
@@ -81,7 +81,7 @@ def start(message):
                 bot.send_message(message.from_user.id, lcw_command_list)
                 bot.register_next_step_handler(message, work_with_lcw)
             else:
-                print(l_war_list)
+                bot.send_message(message.from_user.id, l_war_list)
                 l_war_list = []
 
         case "/badplayerslastcw":
@@ -95,7 +95,7 @@ def start(message):
                         s += f"{i['position']}. {i['nickname']}\n"
                 bot.send_message(message.from_user.id, s)
             else:
-                print(last_cw)
+                bot.send_message(message.from_user.id, last_cw)
 
         case "/badplayerslastlcw":
             bot.send_message(
@@ -137,7 +137,7 @@ def start(message):
                 bot.send_message(message.from_user.id, s)
                 bot.send_message(message.from_user.id, "Подсчет окончен")
             else:
-                print(last_lcw)
+                bot.send_message(message.from_user.id, last_lcw)
 
         case "/badplayerscg":
             bot.send_message(message.from_user.id, "Пака не работает, падажжи")
@@ -161,7 +161,7 @@ def get_clan_id(message):
             s += i["nickname"] + " | Звание:" + i["role"] + "\n"
         bot.send_message(message.from_user.id, s)
     else:
-        print(cur_mems)
+        bot.send_message(message.from_user.id, cur_mems)
 
 
 def work_with_cw(message):
@@ -212,7 +212,7 @@ def work_with_cw_opencw(message):
                     s += f"└──{attack_list[i]['enemyPosition']}| {attack_list[i]['enemyNickname']} {beautify_stars(attack_list[i]['stars'])} {attack_list[i]['attackPercent']}\n"
         bot.send_message(message.from_user.id, s)
     else:
-        print(cw_units)
+        bot.send_message(message.from_user.id, cw_units)
 
 
 def work_with_cw_badplayerscwbynum(message):
@@ -242,7 +242,7 @@ def work_with_cw_badplayerscwbynum(message):
                 s += f"{i['position']}. {i['nickname']}\n"
         bot.send_message(message.from_user.id, s)
     else:
-        print(cw_units)
+        bot.send_message(message.from_user.id, cw_units)
 
 
 def work_with_lcw(message):
@@ -292,7 +292,7 @@ def work_with_lcw_openlcw(message):
         bot.send_message(message.from_user.id, lcw_rounds_command_list)
         bot.register_next_step_handler(message, work_withlcw_rounds)
     else:
-        print(l_war_rounds)
+        bot.send_message(message.from_user.id, l_war_rounds)
         l_war_rounds = []
 
 
@@ -348,7 +348,7 @@ def work_with_lcw_openround(message):
                     s += f"└──{attack_list[i]['enemyPosition']}| {attack_list[i]['enemyNickname']} {beautify_stars(attack_list[i]['stars'])} {attack_list[i]['attackPercent']}\n"
         bot.send_message(message.from_user.id, s)
     else:
-        print(cw_units)
+        bot.send_message(message.from_user.id, cw_units)
 
 
 def work_withlcw_rounds_badplayersroundbynum(message):
@@ -382,13 +382,12 @@ def work_withlcw_rounds_badplayersroundbynum(message):
                 s += f"{i['position']}. {i['nickname']}\n"
         bot.send_message(message.from_user.id, s)
     else:
-        print(cw_units)
+        bot.send_message(message.from_user.id, cw_units)
 
 
 def beautify_stars(stars):
     """
-    ★★★
-    ✰✰✰
+    ★✰
     """
 
     match stars:

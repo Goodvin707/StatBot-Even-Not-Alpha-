@@ -13,7 +13,7 @@ def get_wars(url):
             .find_all("tr")
         ]
     except Exception as e:
-        return f"Data retrieval error\n{e.with_traceback(None)}"
+        return f"Data retrieval error\n{e}\n{e.with_traceback(None)}"
 
 
 def _extract_war_data(war):

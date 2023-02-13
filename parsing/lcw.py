@@ -14,7 +14,7 @@ def get_lcw_rounds(url):
             .find_all("section", class_="league-round")
         ]
     except Exception as e:
-        return f"Data retrieval error\n{e.with_traceback(None)}"
+        return f"Data retrieval error\n{e}\n{e.with_traceback(None)}"
 
 
 def _extract_round_data(round_tag, clan_id):

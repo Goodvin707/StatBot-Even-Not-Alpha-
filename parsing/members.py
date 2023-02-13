@@ -17,7 +17,7 @@ def get_my_current_clan_members(url):
         ]
         return my_clan_members_stats
     except Exception as e:
-        return f"Data retrieval error\n{e.with_traceback(None)}"
+        return f"Data retrieval error\n{e}\n{e.with_traceback(None)}"
 
 
 def _extract_data(my_clan_member):

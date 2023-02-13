@@ -16,7 +16,7 @@ def get_lcw_wars(url):
             "",
         )
     except Exception as e:
-        return f"Data retrieval error\n{e.with_traceback(None)}"
+        return f"Data retrieval error\n{e}\n{e.with_traceback(None)}"
 
 
 def _extract_war_data(war):
