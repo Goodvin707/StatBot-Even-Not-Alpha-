@@ -13,10 +13,12 @@ username (типо id) - '@ClashOfClansClanStatBot'
 
 
 clan_url = "https://clashspot.net/en/clan/V8GJ9C0U"
-command_list = "\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n/lwars - список войн лиги клановвых войн (beta)\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК (скоро (ну хотя как сказать))\nОстальные команды есть внутри подпунктов этих команд."
+command_list = "\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n/lwars - список войн лиги клановвых войн (beta)\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК (скоро (ну хотя как сказать))\n/tree - иерархия команд\nОстальные команды есть внутри подпунктов этих команд."
 cw_command_list = "\nВыберите опцию\n/opencw - открыть КВ по номеру\n/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n/back - назад"
 lcw_command_list = "\nВыберите опцию\n/openlcw - открыть ЛКВ по номеру\n/back - назад"
 lcw_rounds_command_list = "\nВыберите опцию\n/openround - открыть раунд ЛКВ по номеру\n/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n/back - назад"
+tree = "Иерархия команд\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n└──/opencw - открыть КВ по номеру\n└──/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n└──/back - назад\n/lwars - список войн лиги клановвых войн\n└──/openlcw - открыть ЛКВ по номеру\n└──/openround - открыть раунд ЛКВ по номеру\n└──/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n└──/back - назад\n└──/back - назад\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК\n/tree - иерархия команд"
+
 
 site_tabs = {
     "home": "/view/home-village",
@@ -140,6 +142,9 @@ def start(message):
 
         case "/badplayerscg":
             bot.send_message(message.from_user.id, "Пака не работает, падажжи")
+
+        case "/tree":
+            bot.send_message(message.from_user.id, tree)
 
         case _:
             bot.send_message(
