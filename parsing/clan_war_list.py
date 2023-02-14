@@ -21,7 +21,11 @@ def _extract_war_data(war):
     1 - clan1Name & clan1Id
     3 - clan2Name & clan2Id
     5 - warSize
-    7 - clan1Percent & clan1Stars; clan2Percent & clan2Stars
+    7 - Summary
+        └──1 - clan1Percent
+        └──3 - clan1Stars
+        └──5 - clan2Percent
+        └──7 - clan2Stars
     9 - warWinLose
     11 - warDate & warHour
     13 - href
@@ -37,7 +41,21 @@ def _extract_war_data(war):
     clan2_id = war.contents[3].find("span").string
     war_size = int(war.contents[5].find("span").string)
 
+    summary = war.contents[7].contents
+    clan1_percent = ""
+    clan1_stars = 0
+    clan2_percent = ""
+    clan2_stars = 0
+    if len(summary) != 1:
+        clan1_percent = summary[1].string
+        clan1_stars = int(summary[3].string)
+        clan2_stars = int(summary[5].string)
+        clan2_percent = summary[7].string
+
     war_win_lose = war.contents[9].contents[1].string
+
+    war_date = war.contents[11].contents[1].string
+    war_hour = war.contents[11].contents[3].string
 
     war_href_tag = war.contents[13].find("a")
     href = _get_war_href(war_href_tag)
@@ -47,13 +65,13 @@ def _extract_war_data(war):
         "clan2Name": clan2_name,
         "clan2Id": clan2_id,
         "warSize": war_size,
-        "clan1Percent": "",
-        "clan1Stars": "",
-        "clan2Percent": "",
-        "clan2Stars": "",
+        "clan1Percent": clan1_percent,
+        "clan1Stars": clan1_stars,
+        "clan2Percent": clan2_percent,
+        "clan2Stars": clan2_stars,
         "warWinLose": war_win_lose,
-        "warDate": "",
-        "warHour": "",
+        "warDate": war_date,
+        "warHour": war_hour,
         "href": href,
     }
 

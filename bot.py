@@ -13,8 +13,8 @@ username (типо id) - '@ClashOfClansClanStatBot'
 
 
 clan_url = "https://clashspot.net/en/clan/V8GJ9C0U"
-command_list = "\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n/lwars - список войн лиги клановвых войн (beta)\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК\nОстальные команды есть внутри подпунктов этих команд."
-cw_command_list = "\nВыберите опцию\n/opencw - открыть КВ по номеру\n/badplayerscwbynum - найти неэффективных игроков на выбранном КВ"
+command_list = "\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n/lwars - список войн лиги клановвых войн (beta)\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК (скоро (ну хотя как сказать))\nОстальные команды есть внутри подпунктов этих команд."
+cw_command_list = "\nВыберите опцию\n/opencw - открыть КВ по номеру\n/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n/back - назад"
 lcw_command_list = "\nВыберите опцию\n/openlcw - открыть ЛКВ по номеру\n/back - назад"
 lcw_rounds_command_list = "\nВыберите опцию\n/openround - открыть раунд ЛКВ по номеру\n/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n/back - назад"
 
@@ -57,7 +57,7 @@ def start(message):
                 s = ""
                 index = 1
                 for i in war_list:
-                    s += f'#{index}| {i["clan1Name"]} VS {i["clan2Name"]}\n├──Размер: {i["warSize"]} Результат: {i["warWinLose"]}\n└──Итоги: {i["clan1Percent"]} {i["clan1Stars"]} |:| {i["clan2Percent"]} {i["clan2Stars"]}\nДата: {i["clan2Stars"]} {i["warHour"]}\n'
+                    s += f'#{index}| {i["clan1Name"]} VS {i["clan2Name"]}\n├──Размер: {i["warSize"]} Результат: {i["warWinLose"]}\n└──Итоги: {i["clan1Percent"]} {i["clan1Stars"]} |:| {i["clan2Percent"]} {i["clan2Stars"]}\nДата: {i["warDate"]} {i["warHour"]}\n'
                     index += 1
                 bot.send_message(message.from_user.id, s)
                 bot.send_message(message.from_user.id, cw_command_list)
@@ -124,7 +124,6 @@ def start(message):
                     if i == previous:
                         worse_rating += 1
                     else:
-                        # s += f"{previous} не атаковал на {wRating} раундах\n"
                         worst_players_distinct.append(f"{previous} {worse_rating}")
                         worse_rating = 1
                     previous = i
@@ -173,6 +172,8 @@ def work_with_cw(message):
         case "/badplayerscwbynum":
             bot.send_message(message.from_user.id, "Введи номер КВ")
             bot.register_next_step_handler(message, work_with_cw_badplayerscwbynum)
+        case "/back":
+            bot.send_message(message.from_user.id, command_list)
         case _:
             bot.send_message(
                 message.from_user.id, "Что-то ты не то вводишь\n" + cw_command_list
@@ -252,7 +253,6 @@ def work_with_lcw(message):
             bot.register_next_step_handler(message, work_with_lcw_openlcw)
         case "/back":
             bot.send_message(message.from_user.id, command_list)
-            bot.register_next_step_handler(message, start)
         case _:
             bot.send_message(
                 message.from_user.id, "Что-то ты не то вводишь\n" + lcw_command_list
@@ -405,4 +405,4 @@ def sort_by_worse_rating(elem):
     return elem.split(" ")[1]
 
 
-bot.polling(none_stop=True)
+bot.polling(none_stop=True, timeout=5)
