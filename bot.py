@@ -13,11 +13,12 @@ username (типо id) - '@ClashOfClansClanStatBot'
 
 
 clan_url = "https://clashspot.net/en/clan/V8GJ9C0U"
-command_list = "\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n/lwars - список войн лиги клановвых войн (beta)\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК (скоро (ну хотя как сказать))\n/tree - иерархия команд\nОстальные команды есть внутри подпунктов этих команд."
+command_list = "\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n/lwars - список войн лиги клановвых войн (beta)\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК (скоро (ну хотя как сказать))\n/kicklist - список игроков, которых рекомендуется кикнуть\n/tree - иерархия команд\nОстальные команды есть внутри подпунктов этих команд."
+reg_command_list = "\n/reg - зарегать клан\nback - назад"
 cw_command_list = "\nВыберите опцию\n/opencw - открыть КВ по номеру\n/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n/back - назад"
 lcw_command_list = "\nВыберите опцию\n/openlcw - открыть ЛКВ по номеру\n/back - назад"
 lcw_rounds_command_list = "\nВыберите опцию\n/openround - открыть раунд ЛКВ по номеру\n/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n/back - назад"
-tree = "Иерархия команд\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n└──/opencw - открыть КВ по номеру\n└──/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n└──/back - назад\n/lwars - список войн лиги клановвых войн\n└──/openlcw - открыть ЛКВ по номеру\n└──/openround - открыть раунд ЛКВ по номеру\n└──/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n└──/back - назад\n└──/back - назад\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК\n/tree - иерархия команд"
+tree = "Иерархия команд\n/reg - зарегать клан\n└──/reg - зарегать клан\n└──/back - назад\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n└──/opencw - открыть КВ по номеру\n└──/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n└──/back - назад\n/lwars - список войн лиги клановвых войн\n└──/openlcw - открыть ЛКВ по номеру\n      └──/openround - открыть раунд ЛКВ по номеру\n      └──/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n      └──/back - назад\n└──/back - назад\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК\n/kicklist - список игроков, которых рекомендуется кикнуть\n/tree - иерархия команд"
 
 
 site_tabs = {
@@ -29,6 +30,7 @@ site_tabs = {
 war_list = []
 l_war_list = []
 l_war_rounds = []
+kick_list = []
 
 
 @bot.message_handler(content_types=["text"])
@@ -37,9 +39,9 @@ def start(message):
         case "/reg":
             bot.send_message(
                 message.from_user.id,
-                "Скинь id своего клана. Его можно посмотреть в игре на странице клана",
+                reg_command_list,
             )
-            bot.register_next_step_handler(message, get_clan_id)
+            bot.register_next_step_handler(message, start_reg)
 
         case "/clanmems":
             cur_mems = members.get_my_current_clan_members(clan_url + site_tabs["home"])
@@ -143,14 +145,72 @@ def start(message):
         case "/badplayerscg":
             bot.send_message(message.from_user.id, "Пака не работает, падажжи")
 
+        case "/kicklist":
+            bot.send_message(
+                message.from_user.id, "Этот маневр обойдется нам в несколько минут"
+            )
+
+            first_cw = clan_war.get_cw_units(
+                clan_war_list.get_wars(clan_url + site_tabs["clanWars"])[0]["href"]
+            )
+            second_cw = clan_war.get_cw_units(
+                clan_war_list.get_wars(clan_url + site_tabs["clanWars"])[1]["href"]
+            )
+            cur_mems = members.get_my_current_clan_members(clan_url + site_tabs["home"])
+
+            s = ""
+            for i in first_cw:
+                if i["attackList"][0] == "no attacks":
+                    s += f"{i['nickname']} |#{i['id']}\n"
+            for i in second_cw:
+                if i["attackList"][0] == "no attacks" and i["id"] in s:
+                    s += f"{i['nickname']} |#{i['id']}\n"
+
+            cur_mems_s = ""
+            for i in cur_mems:
+                cur_mems_s += f"{i['nickname']} |{i['id']}\n"
+
+            new_s = ""
+            for i in s.split("\n"):
+                if i != "" and i.split("|")[1] in cur_mems_s:
+                    new_s += f"{i}\n"
+
+            counter = {}
+            for elem in new_s.split("\n"):
+                counter[elem] = counter.get(elem, 0) + 1
+            doubles = [element for element, count in counter.items() if count > 1]
+            result = f"\n".join(doubles)
+
+            bot.send_message(
+                message.from_user.id,
+                "Список игроков, не атаковавших на последних двух КВ\n\n" + result,
+            )
+
         case "/tree":
             bot.send_message(message.from_user.id, tree)
-
         case _:
             bot.send_message(
                 message.from_user.id,
                 "Вот список команд короче, а то чето ты не то вводишь" + command_list,
             )
+
+
+def start_reg(message):
+    match (message):
+        case "/reg":
+            bot.send_message(
+                message.from_user.id,
+                "Скинь id своего клана. Его можно посмотреть в игре на странице клана",
+            )
+            bot.register_next_step_handler(message, start_reg)
+        case "/back":
+            bot.send_message(message.from_user.id, command_list)
+        case _:
+            bot.send_message(
+                message.from_user.id, "Что-то ты не то вводишь\n" + reg_command_list
+            )
+            bot.register_next_step_handler(message, work_with_cw)
+            return
 
 
 def get_clan_id(message):
