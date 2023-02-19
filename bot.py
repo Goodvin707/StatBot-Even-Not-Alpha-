@@ -14,11 +14,11 @@ username (типо id) - '@ClashOfClansClanStatBot'
 
 clan_url = "https://clashspot.net/en/clan/V8GJ9C0U"
 command_list = "\n/reg - зарегать клан\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n/lwars - список войн лиги клановвых войн (beta)\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК (скоро (ну хотя как сказать))\n/kicklist - список игроков, которых рекомендуется кикнуть\n/tree - иерархия команд\nОстальные команды есть внутри подпунктов этих команд."
-reg_command_list = "\n/reg - зарегать клан\nback - назад"
+reg_command_list = "\n/beginreg - начать регистрацию\n/back - назад"
 cw_command_list = "\nВыберите опцию\n/opencw - открыть КВ по номеру\n/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n/back - назад"
 lcw_command_list = "\nВыберите опцию\n/openlcw - открыть ЛКВ по номеру\n/back - назад"
 lcw_rounds_command_list = "\nВыберите опцию\n/openround - открыть раунд ЛКВ по номеру\n/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n/back - назад"
-tree = "Иерархия команд\n/reg - зарегать клан\n└──/reg - зарегать клан\n└──/back - назад\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n└──/opencw - открыть КВ по номеру\n└──/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n└──/back - назад\n/lwars - список войн лиги клановвых войн\n└──/openlcw - открыть ЛКВ по номеру\n      └──/openround - открыть раунд ЛКВ по номеру\n      └──/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n      └──/back - назад\n└──/back - назад\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК\n/kicklist - список игроков, которых рекомендуется кикнуть\n/tree - иерархия команд"
+tree = "Иерархия команд\n/reg - зарегать клан\n└──/beginreg - начать регистрацию\n└──/back - назад\n/clanmems - вывести информацио о игроках в клане\n/wars - список клановых войн\n└──/opencw - открыть КВ по номеру\n└──/badplayerscwbynum - найти неэффективных игроков на выбранном КВ\n└──/back - назад\n/lwars - список войн лиги клановвых войн\n└──/openlcw - открыть ЛКВ по номеру\n      └──/openround - открыть раунд ЛКВ по номеру\n      └──/badplayersroundbynum - найти неэффективных игроков на выбранном раунде ЛКВ\n      └──/back - назад\n└──/back - назад\n/badplayerslastcw - список игроков, которые не атаковали на последнием КВ\n/badplayerslastlcw - список игроков, которые не атаковали на последнием ЛКВ\n/badplayerscg - список игроков, которые не участвовали на ИК\n/kicklist - список игроков, которых рекомендуется кикнуть\n/tree - иерархия команд"
 
 
 site_tabs = {
@@ -196,8 +196,8 @@ def start(message):
 
 
 def start_reg(message):
-    match (message):
-        case "/reg":
+    match message.text:
+        case "/beginreg":
             bot.send_message(
                 message.from_user.id,
                 "Скинь id своего клана. Его можно посмотреть в игре на странице клана",
@@ -209,7 +209,7 @@ def start_reg(message):
             bot.send_message(
                 message.from_user.id, "Что-то ты не то вводишь\n" + reg_command_list
             )
-            bot.register_next_step_handler(message, work_with_cw)
+            bot.register_next_step_handler(message, start_reg)
             return
 
 
