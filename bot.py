@@ -1,3 +1,5 @@
+import time
+
 import telebot
 from telebot import types
 
@@ -158,33 +160,42 @@ def start(message):
             )
             cur_mems = members.get_my_current_clan_members(clan_url + site_tabs["home"])
 
-            s = ""
-            for i in first_cw:
-                if i["attackList"][0] == "no attacks":
-                    s += f"{i['nickname']} |#{i['id']}\n"
-            for i in second_cw:
-                if i["attackList"][0] == "no attacks" and i["id"] in s:
-                    s += f"{i['nickname']} |#{i['id']}\n"
+            if (
+                not isinstance(first_cw, str)
+                and not isinstance(second_cw, str)
+                and not isinstance(cur_mems, str)
+            ):
+                s = ""
+                for i in first_cw:
+                    if i["attackList"][0] == "no attacks":
+                        s += f"{i['nickname']} |#{i['id']}\n"
+                for i in second_cw:
+                    if i["attackList"][0] == "no attacks" and i["id"] in s:
+                        s += f"{i['nickname']} |#{i['id']}\n"
 
-            cur_mems_s = ""
-            for i in cur_mems:
-                cur_mems_s += f"{i['nickname']} |{i['id']}\n"
+                cur_mems_s = ""
+                for i in cur_mems:
+                    cur_mems_s += f"{i['nickname']} |{i['id']}\n"
 
-            new_s = ""
-            for i in s.split("\n"):
-                if i != "" and i.split("|")[1] in cur_mems_s:
-                    new_s += f"{i}\n"
+                new_s = ""
+                for i in s.split("\n"):
+                    if i != "" and i.split("|")[1] in cur_mems_s:
+                        new_s += f"{i}\n"
 
-            counter = {}
-            for elem in new_s.split("\n"):
-                counter[elem] = counter.get(elem, 0) + 1
-            doubles = [element for element, count in counter.items() if count > 1]
-            result = f"\n".join(doubles)
+                counter = {}
+                for elem in new_s.split("\n"):
+                    counter[elem] = counter.get(elem, 0) + 1
+                doubles = [element for element, count in counter.items() if count > 1]
+                result = f"\n".join(doubles)
 
-            bot.send_message(
-                message.from_user.id,
-                "Список игроков, не атаковавших на последних двух КВ\n\n" + result,
-            )
+                bot.send_message(
+                    message.from_user.id,
+                    "Список игроков, не атаковавших на последних двух КВ\n\n" + result,
+                )
+            else:
+                bot.send_message(message.from_user.id, first_cw)
+                bot.send_message(message.from_user.id, second_cw)
+                bot.send_message(message.from_user.id, cur_mems)
 
         case "/tree":
             bot.send_message(message.from_user.id, tree)
@@ -470,4 +481,10 @@ def sort_by_worse_rating(elem):
     return elem.split(" ")[1]
 
 
-bot.polling(none_stop=True, timeout=5)
+while True:
+    try:
+        print("\n\nЯ снова живу")
+        bot.polling(none_stop=True)
+    except Exception as e:
+        print(f"\n\nЯ умер по причине:\n{e}")
+        time.sleep(5)
