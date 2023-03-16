@@ -1,4 +1,5 @@
 import time
+from os import system
 
 import telebot
 from telebot import types
@@ -11,6 +12,7 @@ bot = telebot.TeleBot(TOKEN)
 Атрибуты бота
 name - 'StatBot (Beta)'
 username (типо id) - '@ClashOfClansClanStatBot'
+token - а вот этого я вам не скажу
 """
 
 
@@ -481,6 +483,7 @@ def sort_by_worse_rating(elem):
     return elem.split(" ")[1]
 
 
+system("mode con cols=40 lines=15")
 while True:
     try:
         print("\n\nЯ снова живу")
